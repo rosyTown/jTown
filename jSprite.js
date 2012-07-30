@@ -8,10 +8,7 @@
 	window.jSprite = jSprite;
 	
 	jSprite.instanceCount = 0;
-	//jSprite.gettersAndSetters = ['id','classes','x','y','a'];
 	jSprite.DegreesToRadians = (Math.PI / 180);
-	jSprite.IE7;
-	jSprite.IE8;
 	
 	function jSprite () {
 		
@@ -51,7 +48,11 @@
 		// Private Functions
 		//----------------------------------------------------------------------------------------------------------
 		
-		
+		var childAdded = function ($child) {
+			$child.visible($child.visible());
+			if(!_this.mouseChildren() || !_this.mouseEnabled())	$child.mouseChildren(false);
+			$child.dispatchEvent(jEvent.ADDED_TO_STAGE);
+		}
 		
 		// Public Functions
 		//----------------------------------------------------------------------------------------------------------
@@ -64,10 +65,9 @@
 			this.div.appendChild($child.div);
 			$child.parent = this;
 			$child.index(this.numChildren);
-			if(!this.mouseChildren())	$child.mouseEnabled(false);
 			_children.push($child);
 			this.numChildren = _children.length;
-			$child.dispatchEvent(jEvent.ADDED_TO_STAGE);
+			childAdded($child);
 		}
 
 		this.addChildAt = function ($child, $index) {
@@ -78,13 +78,12 @@
 			this.div.appendChild($child.div);
 			$child.parent = this;
 			$child.index($index);
-			if(!this.mouseChildren())	$child.mouseEnabled(false);
 			_children.splice($index, 0, $child);
 			for(var k = $index + 1 ; k < _children.length ; k++) {
 				_children[k].index(_children[k].index() + 1);
 			}
 			this.numChildren = _children.length;
-			$child.dispatchEvent(jEvent.ADDED_TO_STAGE);
+			childAdded($child);
 		}
 		
 		this.removeChild = function ($child) {
@@ -99,6 +98,20 @@
 				}
 			}
 			for(var k = $n ; k < _children.length ; k++) {
+				_children[k].index(_children[k].index() - 1);
+			}
+			this.numChildren = _children.length;
+		}
+
+		this.removeChildAt = function ($index) {
+			if($index >= _children.length) {
+				throw new Error('**jSprite Error: removeChildAt cannot accept an index out of bounds.');
+				return;
+			}
+			this.div.removeChild(_children[$index].div);
+			_children[$index].parent = null;
+			_children.splice($index, 1);
+			for(var k = $index ; k < _children.length ; k++) {
 				_children[k].index(_children[k].index() - 1);
 			}
 			this.numChildren = _children.length;
@@ -123,7 +136,7 @@
 				}
 			};
 			
-			if (!jSprite.IE7 && !jSprite.IE8)	this.div.addEventListener($type, _this[$type + 'function'], $useCapture ? $useCapture : false);
+			if (!jApp.IE7 && !jApp.IE8)	this.div.addEventListener($type, _this[$type + 'function'], $useCapture ? $useCapture : false);
 			else 								this.div.attachEvent('on' + $type, _this[$type + 'function']);
 
 			_listeners[$type] = _listeners[$type] || [];
@@ -131,7 +144,7 @@
 		}
 		
 		this.removeEventListener = function ($type, $function, $useCapture) {
-			if (!jSprite.IE7 && !jSprite.IE8)	this.div.removeEventListener($type, _this[$type + 'function'], $useCapture ? $useCapture : false);
+			if (!jApp.IE7 && !jApp.IE8)	this.div.removeEventListener($type, _this[$type + 'function'], $useCapture ? $useCapture : false);
 			else 								this.div.detachEvent('on' + $type, _this[$type + 'function']);
 
 			if(_listeners[$type]) _listeners[$type] = null;
@@ -171,12 +184,14 @@
 			}
 		}
 
-		this.setStyle = function ($s, $v) {
-			eval('this.div.style.' + $s + ' = "' + $v + '"');
-		}
-		
-		this.getStyle = function ($s) {
-			return eval('this.div.style.' + $s);
+		this.style = function ($s, $v) {
+			if ($v != undefined) {
+				eval('this.div.style.' + $s + ' = "' + $v + '"');
+				return this;
+			}
+			else {
+				return eval('this.div.style.' + $s);
+			}
 		}
 		
 		this.index = function ($v) {
@@ -193,7 +208,7 @@
 		this.buttonMode = function ($v) {
 			if ($v != undefined) {
 				_buttonMode = $v;
-				this.setStyle('cursor',_buttonMode ? 'pointer' : 'auto');
+				this.style('cursor',_buttonMode ? 'pointer' : 'auto');
 				return this;
 			}
 			else {
@@ -201,11 +216,10 @@
 			}
 		}
 		
-		// needs love....
 		this.mouseEnabled = function ($v) {
 			if ($v != undefined) {
 				_mouseEnabled = $v;
-				this.setStyle('pointerEvents', _mouseEnabled ? 'visible' : 'none');//<-- this does not work in IE....sadface
+				this.style('pointerEvents', _mouseEnabled ? 'visible' : 'none');//<-- this does not work in IE....sadface
 				return this;
 			}
 			else {
@@ -213,7 +227,6 @@
 			}
 		}
 		
-		// needs love....
 		this.mouseChildren = function ($v) {
 			if ($v != undefined) {
 				_mouseChildren = $v;
@@ -325,7 +338,7 @@
 		this.alpha = function ($v) {
 			if ($v != undefined) {
 				_alpha = $v;
-				if (!jSprite.IE7 && !jSprite.IE8) {
+				if (!jApp.IE7 && !jApp.IE8) {
 					this.div.style.cssText += 'opacity:' + _alpha;
 					this.div.style.cssText += 'filter: alpha(opacity='+ _alpha * 100 + ')';
 					this.div.style.cssText += '-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity='+ _alpha * 100 + ')"';
@@ -351,7 +364,7 @@
 		this.rotation = function ($v) {
 			if ($v != undefined) {
 				_rotation = $v;
-				if (!jSprite.IE7 && !jSprite.IE8) {
+				if (!jApp.IE7 && !jApp.IE8) {
 					this.div.style.cssText += '-moz-transform: rotate(' + _rotation + 'deg)';
 					this.div.style.cssText += '-webkit-transform: rotate(' + _rotation + 'deg)';
 					this.div.style.cssText += '-o-transform: rotate(' + _rotation + 'deg)';
@@ -381,9 +394,9 @@
 			if ($v != undefined) {
 				_visible = $v;
 				for(var d = 0 ; d < _children.length ; d++) {
-					_children[d].setStyle('display', _visible ? 'inherit' : 'none');
+					_children[d].style('display', _visible ? 'inherit' : 'none');
 				}
-				this.setStyle('visiblity', _visible ? 'visible' : 'hidden');
+				this.style('visiblity', _visible ? 'visible' : 'hidden');
 				return this;
 			}
 			else {
@@ -391,22 +404,10 @@
 			}
 		}
 
-		// needs love....
-		this.tint = function ($v) {
-			if ($v != undefined) {
-				_tint = $v;
-				// ???
-				return this;
-			}
-			else {
-				return _tint;
-			}
-		}
-
 		this.tabEnabled = function ($v) {
 			if ($v != undefined) {
 				_tabEnabled = $v;
-				console.log(this.div.tabIndex);
+				this.div.tabIndex = -1;
 				return this;
 			}
 			else {
@@ -434,8 +435,6 @@
 		this.position(_position);
 
 		window.jSprite.instanceCount++;
-		jSprite.IE7 = new RegExp('MSIE 7').exec(navigator.userAgent) != null;
-		jSprite.IE8 = new RegExp('MSIE 8').exec(navigator.userAgent) != null;
 	}
 	
 })(window));

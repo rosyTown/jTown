@@ -23,6 +23,14 @@
 		// Public Functions
 		//----------------------------------------------------------------------------------------------------------
 		
+		this.pingService = function ($method, $address, $urlVars) {
+			var $vars = '';
+			if($urlVars != undefined) $vars = $urlVars;
+			_this.request.open($method, $address);
+			_this.request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			_this.request.send($vars);
+		}
+
 		this.getData = function ($method, $address, $table, $property, $condition) {
 			var $urlVars = '';
 

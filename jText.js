@@ -38,12 +38,12 @@
 			_proxyText.style.display = 'inline';
 			_proxyText.style.position = 'absolute';
 			_proxyText.style.fontWeight = _bold ? 'bold' : 'normal';
-			_proxyText.style.lineHeight = _this.getStyle('lineHeight');
+			_proxyText.style.lineHeight = _this.style('lineHeight');
 			_proxyText.style.width = _this.setWidth() == 0 ? 'auto' : _this.setWidth() + 'px';
 			_proxyText.style.height = _this.setHeight() == 0 ? 'auto' : _this.setHeight() + 'px';
 			_proxyText.style.fontFamily = _font;
 			_proxyText.style.fontSize = _size;
-			_proxyText.style.wordWrap = _this.getStyle('wordWrap');
+			_proxyText.style.wordWrap = _this.style('wordWrap');
 			if(_setWidth == 0)	_proxyText.style.whiteSpace = 'nowrap';
 			
 			document.body.appendChild(_proxyText);
@@ -52,8 +52,8 @@
 			var $singleLineHeight = _proxyText.offsetHeight;
 			
 			var $leading = 0;
-			if(new RegExp('em').exec(_this.getStyle('lineHeight')) != null)		$leading = parseFloat(document.body.style.lineHeight) * parseFloat(_this.getStyle('lineHeight'));
-			else 																$leading = parseFloat(_this.getStyle('lineHeight'));
+			if(new RegExp('em').exec(_this.style('lineHeight')) != null)		$leading = parseFloat(document.body.style.lineHeight) * parseFloat(_this.style('lineHeight'));
+			else 																$leading = parseFloat(_this.style('lineHeight'));
 
 			_proxyText.innerHTML = $text;
 
@@ -67,8 +67,8 @@
 
 		var updateDimensions = function () {
 			_this.numLines = Math.round(_proxyText.offsetHeight / _this.lineHeight);
-			if(_this.numLines == 1)	_this.setStyle('whiteSpace', 'nowrap');
-			else 					_this.setStyle('whiteSpace', 'normal');
+			if(_this.numLines == 1)	_this.style('whiteSpace', 'nowrap');
+			else 					_this.style('whiteSpace', 'normal');
 			
 			_this.textWidth(_proxyText.offsetWidth);
 			_this.textHeight(_proxyText.offsetHeight);
@@ -112,7 +112,7 @@
 		this.font = function ($v) {
 			if ($v != undefined) {
 				_font = $v;
-				_this.setStyle('fontFamily', _font);
+				_this.style('fontFamily', _font);
 				createProxyText(this.text());
 				updateDimensions();
 				return this;
@@ -125,7 +125,7 @@
 		this.size = function ($v) {
 			if ($v != undefined) {
 				_size = $v;
-				_this.setStyle('fontSize', _size);
+				_this.style('fontSize', _size);
 				if(new RegExp('em').exec(_size) != null)	_sizeNum = parseFloat(document.body.style.fontSize) * parseFloat(_size);
 				else										_sizeNum = parseFloat(_size);
 				createProxyText(this.text());
@@ -140,7 +140,7 @@
 		this.color = function ($v) {
 			if ($v != undefined) {
 				_color = $v;
-				_this.setStyle('color', _color);
+				_this.style('color', _color);
 				return this;
 			}
 			else {
@@ -151,7 +151,7 @@
 		this.bold = function ($v) {
 			if ($v != undefined) {
 				_bold = $v;
-				_this.setStyle('fontWeight', _bold ? 'bold' : 'normal');
+				_this.style('fontWeight', _bold ? 'bold' : 'normal');
 				createProxyText(this.text());
 				updateDimensions();
 				return this;
@@ -164,7 +164,7 @@
 		this.textAlign = function ($v) {
 			if ($v != undefined) {
 				_textAlign = $v;
-				_this.setStyle('textAlign', _textAlign);
+				_this.style('textAlign', _textAlign);
 				return this;
 			}
 			else {
@@ -249,10 +249,10 @@
 		if(document.body.style.lineHeight == '')		document.body.style.lineHeight = '16px';
 		if(document.body.style.letterSpacing == '')		document.body.style.letterSpacing = '0px';
 
-		if(_this.getStyle('fontFamily') == '')		_this.font(document.body.style.fontFamily);
-		if(_this.getStyle('fontSize') == '')		_this.size(document.body.style.fontSize);
-		if(_this.getStyle('lineHeight') == '')		_this.setStyle('lineHeight', document.body.style.lineHeight);
-		if(_this.getStyle('letterSpacing') == '')	_this.setStyle('letterSpacing', document.body.style.letterSpacing);
+		if(_this.style('fontFamily') == '')		_this.font(document.body.style.fontFamily);
+		if(_this.style('fontSize') == '')		_this.size(document.body.style.fontSize);
+		if(_this.style('lineHeight') == '')		_this.style('lineHeight', document.body.style.lineHeight);
+		if(_this.style('letterSpacing') == '')	_this.style('letterSpacing', document.body.style.letterSpacing);
 
 		// so we have to secretly add this.div to the body so that we can extract its dimension data (width, height)
 		// then when this is added to the stage for real, we can set it's visibility back to true.
@@ -261,8 +261,6 @@
 		_this.visible(false);
 
 		if($text != undefined)	_this.text($text);
-
-		//_this.setStyle('backgroundColor', '#fcb5b5');
 	}
 	
 })(window));
