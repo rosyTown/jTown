@@ -15,6 +15,8 @@
 		var _image;
 		var _source;
 		var _timer;
+		var _width;
+		var _height;
 		
 		// Private Functions
 		//----------------------------------------------------------------------------------------------------------
@@ -55,6 +57,28 @@
 			}
 			else {
 				return _source;
+			}
+		}
+
+		this.width = function ($v) {
+			if ($v != undefined) {
+				_width = $v;
+				_image.style.width = _width.toString() + 'px';
+				return this;
+			}
+			else {
+				return _width;
+			}
+		}
+		
+		this.height = function ($v) {
+			if ($v != undefined) {
+				_height = $v;
+				_image.style.height = _height.toString() + 'px';
+				return this;
+			}
+			else {
+				return _height;
 			}
 		}
 		

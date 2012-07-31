@@ -83,16 +83,15 @@
 
 		var checkHashTag = function () {
 			// ie7 isnt keeping track of the href when back/forward are pressed....
-			//console.log(document.location.href + ' : ' +_this.currentHashTag);
 			if(_this.newHashTag != _this.currentHashTag) {							// if the hash has changed due to site navigation...
 				setCurrentState();
 				document.location.href = _this.currentAddress + '#' + _this.currentHashTag;
 				if(_onChangeFunction != undefined) 	_onChangeFunction(_this);
 			}			
 			else if(document.location.href.split('#')[1] != _this.currentHashTag) {		// if the hash has changed due to the back/forward browser buttons....
-				_this.newHashTag = document.location.href.split('#')[1];
+				_this.newHashTag = document.location.href.split('#')[1] == undefined ? '' : document.location.href.split('#')[1];
 				setCurrentState();
-				document.location.href = _this.currentAddress + '#' + _this.currentHashTag;
+				if(_this.currentHashTag != '')		document.location.href = _this.currentAddress + '#' + _this.currentHashTag;
 				if(_onChangeFunction != undefined) 	_onChangeFunction(_this);
 			}
 		}
@@ -107,7 +106,7 @@
 		// Constructor Implementation
 		//----------------------------------------------------------------------------------------------------------
 
-		_this.newHashTag = document.location.href.split('#')[1];
+		_this.newHashTag = document.location.href.split('#')[1] == undefined ? '' : document.location.href.split('#')[1];
 		setCurrentState();
 		_onChangeFunction = $onChangeFunction;
 		_timer = setInterval(checkHashTag, 50);
