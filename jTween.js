@@ -48,7 +48,8 @@
 			for (i = 0 ; i < _properties.length ; i++) {
 				var $obj = _properties[i];
 				var $newValue = $obj.startValue + ($obj.diff * _ratio);
-				eval('_jsprite.' + $obj.name + '(' + $newValue + ')');
+				if($obj.isGetter)	eval('_jsprite.' + $obj.name + '(' + $newValue + ')');
+				else				eval('_jsprite.' + $obj.name + '=' + $newValue);
 			}
 		}
 		
@@ -82,7 +83,8 @@
 		var reset = function () {
 			for (i = 0 ; i < _properties.length ; i++) {
 				var $obj = _properties[i];
-				eval('_jsprite.' + $obj.name + '(' + $obj.startValue + ')');
+				if($obj.isGetter)	eval('_jsprite.' + $obj.name + '(' + $obj.startValue + ')');
+				else				eval('_jsprite.' + $obj.name + '=' + $obj.startValue);
 			}
 			_currentTime = 0;
 			_ratio = 0;
@@ -95,10 +97,12 @@
 			}
 			for (var o in _object) {
 				if (o!='ease' && o!='easeParams' && o!='delay' && o!='onComplete' && o!='onStart' && o!='onProgress' && o!='repeat' && o!='yoyo') {
-					var $startVal = _from ? _object[o] : eval('_jsprite.' + o + '()');
-					var $endVal = _from ? eval('_jsprite.' + o + '()') : _object[o];
+					var $isGetter = typeof eval('_jsprite.' + o) == 'function';
+					var $currentValue = $isGetter ? eval('_jsprite.' + o + '()') : eval('_jsprite.' + o);
+					var $startVal = _from ? _object[o] : $currentValue;
+					var $endVal = _from ? $currentValue : _object[o];
 					var $diffVal = $endVal - $startVal;
-					var $prop = {'name':o, 'startValue':$startVal, 'endValue':$endVal, 'diff':$diffVal};
+					var $prop = {'name':o, 'startValue':$startVal, 'endValue':$endVal, 'diff':$diffVal, 'isGetter':$isGetter};
 					_properties.push($prop);
 				}
 			}
@@ -112,6 +116,7 @@
 				$prop.startValue = $reversed ? $endVal : $startVal;
 				$prop.endValue = $reversed ? $startVal : $endVal;
 				$prop.diff = $startVal - $endVal;
+				$prop.isGetter = _properties[i].isGetter;
 			}
 		}
 		
