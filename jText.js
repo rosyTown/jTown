@@ -223,6 +223,13 @@
 			if ($v != undefined) {
 				_input = $v;
 				var $inputTag = _this.setHeight() == 0 ? document.createElement('input') : document.createElement('textarea');
+
+				for (var node = 0 ; node < document.body.childNodes.length ; node++) {
+					if(document.body.childNodes[node].id == _this.id()) {
+						document.body.removeChild(document.body.childNodes[node]);
+					}
+				}
+
 				if(_this.parent) {
 					_this.parent.div.removeChild(_this.div);
 					_this.parent.div.appendChild($inputTag);
