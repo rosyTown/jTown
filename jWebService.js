@@ -78,10 +78,18 @@
 		}
 
 		this.destroy = function () {
-			_this.request.removeEventListener(jEvent.HTTP_REQUEST_PROGRESS, onProgress);
-			_this.request.removeEventListener(jEvent.HTTP_REQUEST_COMPLETE, onComplete);
-			_this.request.removeEventListener(jEvent.HTTP_REQUEST_ERROR, onError);
-			_this.request.removeEventListener(jEvent.HTTP_REQUEST_ABORT, onAbort);
+			if (!jApp.IE7 && !jApp.IE8)	{
+				_this.request.removeEventListener(jEvent.HTTP_REQUEST_PROGRESS, onProgress);
+				_this.request.removeEventListener(jEvent.HTTP_REQUEST_COMPLETE, onComplete);
+				_this.request.removeEventListener(jEvent.HTTP_REQUEST_ERROR, onError);
+				_this.request.removeEventListener(jEvent.HTTP_REQUEST_ABORT, onAbort);
+			}
+			else {
+				_this.request.detachEvent('on' + jEvent.HTTP_REQUEST_PROGRESS, onProgress);  
+				_this.request.detachEvent('on' + jEvent.HTTP_REQUEST_COMPLETE, onComplete);  
+				_this.request.detachEvent('on' + jEvent.HTTP_REQUEST_ERROR, onError);  
+				_this.request.detachEvent('on' + jEvent.HTTP_REQUEST_ABORT, onAbort);
+			}
 			_this.request = null;
 			_this = null;
 		}
@@ -123,10 +131,33 @@
 		//----------------------------------------------------------------------------------------------------------
 		
 		_this.request = new XMLHttpRequest();
-		_this.request.addEventListener(jEvent.HTTP_REQUEST_PROGRESS, onProgress, false);  
-		_this.request.addEventListener(jEvent.HTTP_REQUEST_COMPLETE, onComplete, false);  
-		_this.request.addEventListener(jEvent.HTTP_REQUEST_ERROR, onError, false);  
-		_this.request.addEventListener(jEvent.HTTP_REQUEST_ABORT, onAbort, false);
+
+		if (!jApp.IE7 && !jApp.IE8)	{
+			_this.request.addEventListener(jEvent.HTTP_REQUEST_PROGRESS, onProgress, false);  
+			_this.request.addEventListener(jEvent.HTTP_REQUEST_COMPLETE, onComplete, false);  
+			_this.request.addEventListener(jEvent.HTTP_REQUEST_ERROR, onError, false);  
+			_this.request.addEventListener(jEvent.HTTP_REQUEST_ABORT, onAbort, false);
+		}
+		else {
+			_this.request.onreadystatechange = function () {
+				
+				if (this.readyState != 4)	return;
+
+				if(_this[jEvent.HTTP_REQUEST_COMPLETE]) {
+					try
+					{
+						_this.responseArray = eval(_this.request.responseText);
+					}
+					catch(e)
+					{
+						_this.responseArray = [];
+					}
+					console.log('--' + _this.responseArray);
+					_this.responseString = _this.request.responseText;
+					_this[jEvent.HTTP_REQUEST_COMPLETE](_this);
+				}
+			}
+		}
 		
 	}
 	

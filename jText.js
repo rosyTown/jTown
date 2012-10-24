@@ -236,7 +236,7 @@
 				}				
 				$inputTag.id = _this.div.id;
 				for(var ii in _this.div.style) {
-					$inputTag.style[ii] = _this.div.style[ii];
+					if(_this.div.style[ii])	$inputTag.style[ii] = _this.div.style[ii];
 				}
 				_this.div = $inputTag;
 				_this.text(_text);
