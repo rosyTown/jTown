@@ -71,7 +71,7 @@
 		}
 
 		this.addChildAt = function ($child, $index) {
-			if($index >= _children.length) {
+			if($index >= _children.length && _children.length > 0) {
 				throw new Error('**jSprite Error: addChildAt cannot accept an index out of bounds.');
 				return;
 			}
@@ -104,7 +104,7 @@
 		}
 
 		this.removeChildAt = function ($index) {
-			if($index >= _children.length) {
+			if($index >= _children.length && _children.length > 0) {
 				throw new Error('**jSprite Error: removeChildAt cannot accept an index out of bounds.');
 				return;
 			}
@@ -157,6 +157,8 @@
 				this.eventVars.splice(0,1);
 			}
 			if(_listeners[$eventID])	_listeners[$eventID][0]();
+
+			this.eventVars = [];
 		}
 		
 		// Getters & Setters
