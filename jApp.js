@@ -33,6 +33,40 @@
 		return	new RegExp('file:/').exec(window.location.href) != null;
 	}
 
+	jApp.hexToRGB = function ($hex) {
+		var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+		$hex = $hex.replace(shorthandRegex, function(m, r, g, b) {
+			return r + r + g + g + b + b;
+		});
+
+		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec($hex);
+		return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+		} : null;
+	}
+
+	jApp.RGBToHex = function ($r, $g, $b) {
+		return "#" + ((1 << 24) + ($r << 16) + ($g << 8) + $b).toString(16).slice(1);
+	}
+
+	jApp.stringToRBG = function ($string) {
+		//string usually looks someting like this -> rgb(0, 0, 0)
+		$string = $string.replace('rgb','');
+		$string = $string.replace('(','');
+		$string = $string.replace(')','');
+		$string = $string.replace(/ /g,'');
+		var $a = $string.split(',');
+
+		var $obj = {};
+		$obj.r = parseInt($a[0]);
+		$obj.g = parseInt($a[1]);
+		$obj.b = parseInt($a[2]);
+
+		return $obj;
+	}
+
 	function jApp () {
 
 		var getBrowserInfo = function () {

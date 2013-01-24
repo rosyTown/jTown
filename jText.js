@@ -45,7 +45,7 @@
 			_proxyText.style.fontSize = _size;
 			_proxyText.style.wordWrap = _this.style('wordWrap');
 			if(_setWidth == 0)	_proxyText.style.whiteSpace = 'nowrap';
-			
+
 			document.body.appendChild(_proxyText);
 
 			_proxyText.innerHTML = 'W';
@@ -236,7 +236,7 @@
 				}				
 				$inputTag.id = _this.div.id;
 				for(var ii in _this.div.style) {
-					if(_this.div.style[ii])	$inputTag.style[ii] = _this.div.style[ii];
+					$inputTag.style[ii] = _this.div.style[ii];
 				}
 				_this.div = $inputTag;
 				_this.text(_text);
