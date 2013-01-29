@@ -45,6 +45,7 @@
 			_proxyText.style.fontSize = _size;
 			_proxyText.style.wordWrap = _this.style('wordWrap');
 			if(_setWidth == 0)	_proxyText.style.whiteSpace = 'nowrap';
+			if(_this.input() && _proxyText.style.height == 'auto')	_proxyText.style.height = _proxyText.style.lineHeight;
 
 			document.body.appendChild(_proxyText);
 
@@ -99,7 +100,8 @@
 		this.text = function ($v) {
 			if ($v != undefined) {
 				_text = $v;
-				createProxyText(this.text());
+				//createProxyText(this.text());
+				createProxyText(_text);
 				updateDimensions();
 				this.input() ? this.div.value = _text : this.div.innerHTML = _text;
 				return this;
