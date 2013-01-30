@@ -54,9 +54,13 @@
 				if($obj.name == 'RGBr')			$newR = $obj;
 				else if($obj.name == 'RGBg')	$newG = $obj;
 				else if($obj.name == 'RGBb')	$newB = $obj;
-				else {
+				else if(isPropertyTween($obj.name)) {
 					$newValue = $obj.startValue + ($obj.diff * _ratio);
 					eval('_jsprite.' + $obj.name + '(' + $newValue + ')');
+				}
+				else {
+					$newValue = $obj.startValue + ($obj.diff * _ratio);
+					eval('_jsprite.' + $obj.name + '=' + $newValue);
 				}
 			}
 
@@ -129,16 +133,23 @@
 					_properties.push($propG);
 					_properties.push($propB);
 				}
-				else if (o!='ease' && o!='easeParams' && o!='delay' && o!='onComplete' && o!='onStart' && o!='onProgress' && o!='repeat' && o!='yoyo') {
+				else if(isPropertyTween(o)) { // if we are tweening a property such as x,y...
 					var $startVal = _from ? _object[o] : eval('_jsprite.' + o + '()');
 					var $endVal = _from ? eval('_jsprite.' + o + '()') : _object[o];
 					var $diffVal = $endVal - $startVal;
 					var $prop = {'name':o, 'startValue':$startVal, 'endValue':$endVal, 'diff':$diffVal};
 					_properties.push($prop);
 				}
+				else if (isVariableTween(o)) { // if we are tweening a variable
+					var $startVal = _from ? _object[o] : eval('_jsprite.' + o);
+					var $endVal = _from ? eval('_jsprite.' + o) : _object[o];
+					var $diffVal = $endVal - $startVal;
+					var $prop = {'name':o, 'startValue':$startVal, 'endValue':$endVal, 'diff':$diffVal};
+					_properties.push($prop);
+				}
 			}
 		}
-		
+
 		var rebuildTweeningProperties = function ($reversed) {
 			for (i = 0 ; i < _properties.length ; i++) {
 				var $prop = _properties[i];
@@ -207,11 +218,23 @@
 			_properties = null;
 		}
 
+		var isPropertyTween = function ($prop) {
+			var $is = false;
+			if($prop == 'x' || $prop == 'y' || $prop == 'width' || $prop == 'height' || $prop == 'alpha' || $prop == 'rotation')	$is = true;
+			return $is;
+		}
+
 		var isColorTween = function ($prop) {
 			var $is = false;
-			if($prop == 'color')			$is = true;
-			if($prop == 'backgroundColor')	$is = true;
-			if($prop == 'borderColor')		$is = true;
+			if($prop == 'color' || $prop == 'backgroundColor' || $prop == 'borderColor')	$is = true;
+			return $is;
+		}
+
+		var isVariableTween = function ($prop) {
+			var $is = true;
+			if(isPropertyTween($prop))	$is = false;
+			if(isColorTween($prop))		$is = false;
+			if($prop=='ease' || $prop=='easeParams' || $prop=='delay' || $prop=='onComplete' || $prop=='onStart' || $prop=='onProgress' || $prop=='repeat' || $prop=='yoyo')	$is = false;
 			return $is;
 		}
 		
