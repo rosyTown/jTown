@@ -88,8 +88,8 @@
 				else if (_yoyo != null && _repeat == null)		yoyoClone();
 				else if (_yoyo != null && _repeat != null) 		{}// shouldn't be using yoyo and repeat together!!! neither will be executed as a result.
 				else {
-					if (_onComplete) _onComplete();
 					_jsprite.tweening = false;
+					if (_onComplete) _onComplete();
 					jTween.killTweensOf(_jsprite);
 					return;
 				}
