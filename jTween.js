@@ -58,6 +58,9 @@
 					$newValue = $obj.startValue + ($obj.diff * _ratio);
 					eval('_jsprite.' + $obj.name + '(' + $newValue + ')');
 				}
+				else if($obj.name == 'visible' && $obj.diff == 'visible') {
+					eval('_jsprite.' + $obj.name + '(' + $obj.endValue + ')');
+				}
 				else {
 					$newValue = $obj.startValue + ($obj.diff * _ratio);
 					eval('_jsprite.' + $obj.name + '=' + $newValue);
@@ -144,6 +147,13 @@
 					var $startVal = _from ? _object[o] : eval('_jsprite.' + o);
 					var $endVal = _from ? eval('_jsprite.' + o) : _object[o];
 					var $diffVal = $endVal - $startVal;
+					var $prop = {'name':o, 'startValue':$startVal, 'endValue':$endVal, 'diff':$diffVal};
+					_properties.push($prop);
+				}
+				else if(o == 'visible') { // if we are tweening visiblity
+					var $startVal = _from ? _object[o] : eval('_jsprite.' + o + '()');
+					var $endVal = _from ? eval('_jsprite.' + o + '()') : _object[o];
+					var $diffVal = 'visible';
 					var $prop = {'name':o, 'startValue':$startVal, 'endValue':$endVal, 'diff':$diffVal};
 					_properties.push($prop);
 				}
@@ -234,7 +244,7 @@
 			var $is = true;
 			if(isPropertyTween($prop))	$is = false;
 			if(isColorTween($prop))		$is = false;
-			if($prop=='ease' || $prop=='easeParams' || $prop=='delay' || $prop=='onComplete' || $prop=='onStart' || $prop=='onProgress' || $prop=='repeat' || $prop=='yoyo')	$is = false;
+			if($prop=='visible' || $prop=='ease' || $prop=='easeParams' || $prop=='delay' || $prop=='onComplete' || $prop=='onStart' || $prop=='onProgress' || $prop=='repeat' || $prop=='yoyo')	$is = false;
 			return $is;
 		}
 		

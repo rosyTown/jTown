@@ -220,6 +220,7 @@
 			if ($v != undefined) {
 				_mouseEnabled = $v;
 				this.style('pointerEvents', _mouseEnabled ? 'visible' : 'none');//<-- this does not work in IE....sadface
+				if(this.visible)	this.visible(true);
 				return this;
 			}
 			else {
@@ -396,7 +397,7 @@
 				for(var d = 0 ; d < _children.length ; d++) {
 					_children[d].style('display', _visible ? 'inherit' : 'none');
 				}
-				this.style('visiblity', _visible ? 'visible' : 'hidden');
+				this.style('visibility', _visible ? 'visible' : 'hidden');
 				return this;
 			}
 			else {

@@ -17,6 +17,7 @@
 		var _timer;
 		var _width;
 		var _height;
+		var _visible = true;
 		
 		// Private Functions
 		//----------------------------------------------------------------------------------------------------------
@@ -29,9 +30,22 @@
 		}
 
 		var addImage = function () {
-			_this.width(_image.width);
-			_this.height(_image.height);
 			_this.div.appendChild(_image);
+
+			if(_width == undefined)		_this.width(_image.width);
+			else						_this.width(_width);
+			
+			if(_height == undefined)	_this.height(_image.height);
+			else						_this.height(_height);
+			
+			if(_this.rotation() != 0) {
+				$r90210 = _this.rotation();
+				_this.rotation($r90210);
+			}
+
+			$v90210 = _this.visible();
+			_this.visible($v90210);
+			
 			_this.dispatchEvent(jEvent.IMAGE_READY);
 		}
 
@@ -82,6 +96,17 @@
 			}
 		}
 		
+		this.visible = function ($v) {
+			if ($v != undefined) {
+				_visible = $v;
+				_image.style.visibility = _visible ? 'visible' : 'hidden';
+				return this;
+			}
+			else {
+				return _visible;
+			}
+		}
+
 		// Constructor Implementation
 		//----------------------------------------------------------------------------------------------------------
 		
