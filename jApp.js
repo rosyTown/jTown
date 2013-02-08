@@ -14,6 +14,7 @@
 	jApp.touchDevice = false;
 	jApp.hasFlash = false;
 	jApp.flashVersion = '';
+	jApp.viewport;
 
 	// Public Static Functions
 	//----------------------------------------------------------------------------------------------------------
@@ -189,6 +190,8 @@
 		if(/Mobile/i.test(getBrowserInfo().userAgent)) {
 			jApp.touchDevice = true;
 		}
+
+		jApp.viewport = document.querySelector('meta[name="viewport"]');
 	}
 
 	jApp();
