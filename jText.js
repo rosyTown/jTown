@@ -27,6 +27,7 @@
 		var _textWidth = 0;
 		var _textHeight = 0;
 		var _input = false;
+		var _inputType = 'text';
 		var _proxyText;
 		
 		// Private Functions
@@ -240,12 +241,26 @@
 				for(var ii in _this.div.style) {
 					$inputTag.style[ii] = _this.div.style[ii];
 				}
+				$inputTag.type = _inputType;
 				_this.div = $inputTag;
 				_this.text(_text);
 				return this;
 			}
 			else {
 				return _input;
+			}
+		}
+
+		this.inputType = function ($v) {
+			if ($v != undefined) {
+				_inputType = $v;
+				if(_this.input()) {
+					_this.div.type = _inputType;
+				}
+				return this;
+			}
+			else {
+				return _inputType;
 			}
 		}
 
