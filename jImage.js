@@ -32,11 +32,8 @@
 		var addImage = function () {
 			_this.div.appendChild(_image);
 
-			if(_width == undefined)		_this.width(_image.width);
-			else						_this.width(_width);
-			
-			if(_height == undefined)	_this.height(_image.height);
-			else						_this.height(_height);
+			_this.width(_image.width);
+			_this.height(_image.height);
 			
 			if(_this.rotation() != 0) {
 				$r90210 = _this.rotation();
@@ -77,7 +74,7 @@
 		this.width = function ($v) {
 			if ($v != undefined) {
 				_width = $v;
-				_image.style.width = _width.toString() + 'px';
+				_image.width = _width;
 				return this;
 			}
 			else {
@@ -88,7 +85,7 @@
 		this.height = function ($v) {
 			if ($v != undefined) {
 				_height = $v;
-				_image.style.height = _height.toString() + 'px';
+				_image.height = _height;
 				return this;
 			}
 			else {
